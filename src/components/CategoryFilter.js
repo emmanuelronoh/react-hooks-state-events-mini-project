@@ -1,12 +1,14 @@
-import React from "react";
+// src/components/CategoryFilter.js
+import React from 'react';
 
-function CategoryFilter() {
-  return (
-    <div className="categories">
-      <h5>Category filters</h5>
-      {/* render <button> elements for each category here */}
-    </div>
-  );
-}
+const CategoryFilter = ({ categories, onFilterChange }) => (
+  <select onChange={(e) => onFilterChange(e.target.value)}>
+    {categories.map(category => (
+      <option key={category} value={category}>
+        {category}
+      </option>
+    ))}
+  </select>
+);
 
 export default CategoryFilter;

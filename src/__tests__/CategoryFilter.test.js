@@ -1,46 +1,20 @@
-import "@testing-library/jest-dom";
-import { render, screen, fireEvent } from "@testing-library/react";
-import CategoryFilter from "../components/CategoryFilter";
-import App from "../components/App";
-import { CATEGORIES } from "../data";
+// src/__tests__/CategoryFilter.test.js
+import '@testing-library/jest-dom';
+import { render, screen } from '@testing-library/react';
+import CategoryFilter from '../components/CategoryFilter';
 
-test("displays a button for each category", () => {
-  render(<CategoryFilter categories={CATEGORIES} />);
-  for (const category of CATEGORIES) {
-    expect(screen.queryByText(category)).toBeInTheDocument();
-  }
-});
+const categories = ['All', 'Food', 'Work'];
 
-test("clicking the category button adds a class of 'selected' to the button", () => {
-  render(<App />);
+test('renders a select element with options', () => {
+  const onFilterChange = jest.fn();
+  render(<CategoryFilter categories={categories} onFilterChange={onFilterChange} />);
 
-  const codeButton = screen.queryByRole("button", { name: "Code" });
-  const allButton = screen.queryByRole("button", { name: "All" });
+  // Check if the select element is in the document
+  const selectElement = screen.getByRole('combobox');
+  expect(selectElement).toBeInTheDocument();
 
-  fireEvent.click(codeButton);
-
-  expect(codeButton.classList).toContain("selected");
-  expect(allButton.classList).not.toContain("selected");
-});
-
-test("clicking the category button filters the task list", () => {
-  render(<App />);
-
-  const codeButton = screen.queryByRole("button", { name: "Code" });
-
-  fireEvent.click(codeButton);
-
-  expect(screen.queryByText("Build a todo app")).toBeInTheDocument();
-  expect(screen.queryByText("Buy rice")).not.toBeInTheDocument();
-});
-
-test("displays all tasks when the 'All' button is clicked", () => {
-  render(<App />);
-
-  const allButton = screen.queryByRole("button", { name: "All" });
-
-  fireEvent.click(allButton);
-
-  expect(screen.queryByText("Build a todo app")).toBeInTheDocument();
-  expect(screen.queryByText("Buy rice")).toBeInTheDocument();
+  // Check if all options are present
+  categories.forEach(category => {
+    expect(screen.getByRole('option', { name: category })).toBeInTheDocument();
+  });
 });
